@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Poli-Granulator</title>
+
+  <!-- Themes import -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ui/knobs/knobs.css">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css"> 
+
+</head>
+<body>
+
+  <canvas id="bgAnim" class="bg-anim-canvas" aria-hidden="true"></canvas>
+
+  <div class="granular-ui" data-cursor="a">
+    <!-- Center Pannel -->
+    <div class="center-pane">
+
+      <!-- Waveform window -->
+      <div class="wave-bezel">
+        <div class="wave-window">
+          <!-- Waveform Canvas -->
+          <canvas id="waveformCanvas" width="800" height="220" aria-label="Waveform display"></canvas>
+          
+          <div class="playhead" id="playhead" aria-hidden="true"></div>
+                    
+          <!-- Canvas Background -->
+          <div id="waveSplash" class="wave-splash" aria-hidden="true">
+            <div class="splash-visual" aria-hidden="true"></div>
+            <div class="splash-card">
+              <div class='splash-text'>
+                Welcome to our granular synthesizer! <br/><br/>
+                This web application uses the Web Audio API to implement  
+                
+                granular synthesis, which is a sound synthesis method that operates on the microsound time scale. It is based on the same principle as sampling, however, the samples are  
+                small pieces of around from 1 to 100 ms in duration: these small pieces are called <i><u>grains</u></i>. Multiple grains may be layered on top of each other, sampling them in up to three 
+                different locations thanks to our three independent cursors. 
+                 
+                Use whichever audio file you like as input or directly record your voice from the microphone! 
+                Once loaded, you're ready to start experimenting with the various parameters to create interesting textures and soundscapes. <br/>
+
+                <br/> For a more convenient navigation through the application, you can also use these keyboard shortcuts: 
+                [spacebar] play/pause; [r] start/stop output recording; [&#x2190/&#x2192] move the active cursor; [&#x2191/&#x2193] master volume; 
+                [<i class="material-icons" style="font-size:12px">backspace</i>] reset params of the active cursor; [m] hold to record from mic; [s] switch active cursor; 
+                [i] hold to show info overlay. To modify a single knob, hold [1-0,',ì] + [&#x2190/&#x2192], hold Shift/Option (Alt) for fine/coarse steps. <br/>
+                Piano keyboard mode: use your keyboard like a midi controller; press keys [a--k] for the white keys and [w-e-t-y-u] for the black keys; [z,x] to change octave. In alternative, 
+                you can also connect your own MIDI device.
+                <br/><p style="text-align: right;">Happy granulating! =)</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- CRT Overlay -->
+          <div class="fx-overlay crt-scanlines" aria-hidden="true"></div>
+          <div class="fx-overlay crt-aperture"  aria-hidden="true"></div>
+          <div class="fx-overlay crt-flicker"   aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="tools-bar" role="toolbar" aria-label="Cursor & Utilities">
+
+        <!-- Threeway Switch -->
+        <div class="tools-group">
+          <div class="tri-bezel">
+            <button
+              id="abcMiniSwitch" class="slide-switch3" type="button" role="slider" aria-label="Selettore a tre vie" aria-orientation="horizontal"
+              aria-valuemin="0" aria-valuemax="2" aria-valuenow="0" data-valuetext-left="Sinistra" data-valuetext-center="Centro" data-valuetext-right="Destra">
+              
+              <span class="rail" aria-hidden="true"></span>
+              <span class="thumb" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Info Overlay Button -->
+          <button id="ioUnloadBtn" class="io-round-btn io-unload" type="button"
+                  aria-label="Show informations overlay" title="Info">
+            <span class="io-round-glyph">i</span>
+          </button>
+        
+        <!-- Split Button Reset / Hold / Load / Mic -->
+        <div id="ioSplit" class="io-split-btn" role="group" aria-label="Reset, Hold, File Input and Microphone">
+          <!-- Reset -->
+          <button id="stopButton" class="io-half io-reset" type="button" aria-label="Reset" title="Reset">
+            <span class="io-icon icon-reset" aria-hidden="true"></span>
+          </button>
+
+          <!-- Hold -->
+          <button id="ioHoldBtn" class="io-half io-hold" type="button"
+                  aria-label="Toggle Hold (latch keyboard notes) for active cursor" title="Hold">
+            <span class="io-icon icon-hold" aria-hidden="true"></span>
+          </button>
+
+          <!-- Load -->
+          <button id="ioLoadBtn" class="io-half io-load" type="button" aria-label="Load audio file" title="Load">
+            <span class="io-icon icon-load" aria-hidden="true"></span>
+            <input type="file" id="audioFileInput" accept="audio/*" hidden />
+          </button>
+
+          <!-- Mic -->
+          <button id="ioMicBtn" class="io-half io-mic" type="button" aria-label="Hold to record from microphone" title="Hold to record">
+            <span class="mic-led" aria-hidden="true"></span>
+            <span class="io-icon icon-mic" aria-hidden="true"></span>
+          </button>
+        </div>        
+      </div>
+
+      <!-- Parameters Knobs -->
+      <div class="params-wrap">
+        <div class="params">
+
+          <div class="col">
+            <label for="attackRange" class="small">ATTACK</label>
+            <input type="range" id="attackRange" class="param-slider" min="0.01" max="1" step="0.01" value="0.1">
+          </div>
+
+          <div class="col">
+            <label for="grainSizeRange" class="small">SIZE</label>
+            <input type="range" id="grainSizeRange" class="param-slider" min="0.25" max="4" step="0.01" value="1">
+          </div>
+
+          <div class="col">
+            <label for="spreadRange" class="small">SPREAD</label>
+            <input type="range" id="spreadRange" class="param-slider" min="0" max="1" step="0.01" value="0.1">
+          </div>
+
+          <div class="col">
+            <label for="lfoFreqRange" class="small">LFO FREQ</label>
+            <input type="range" id="lfoFreqRange" class="param-slider" min="0.1" max="10" step="0.1" value="1">
+          </div>
+
+          <div class="col">
+            <label for="pitchRange" class="small">PITCH</label>
+            <input type="range" id="pitchRange" class="param-slider" min="-12" max="12" step="0.1" value="0">
+          </div>
+
+          <div class="col">
+            <label for="panRange" class="small">PAN</label>
+            <input type="range" id="panRange" class="param-slider" min="-1" max="1" step="0.1" value="0">
+          </div>
+
+          <div class="col">
+            <label for="releaseRange" class="small">RELEASE</label>
+            <input type="range" id="releaseRange" class="param-slider" min="0.01" max="1" step="0.01" value="0.1">
+          </div>
+
+          <div class="col">
+            <label for="densityRange" class="small">DENSITY</label>
+            <input type="range" id="densityRange" class="param-slider" min="1" max="100" step="1" value="10">
+          </div>
+
+          <div class="col">
+            <label for="scanSpeedRange" class="small">SCAN</label>
+            <input type="range" id="scanSpeedRange" class="param-slider" min="-0.1" max="0.1" step="0.001" value="0">
+          </div>
+
+          <div class="col">
+            <label for="lfoDepthRange" class="small">LFO DEPTH</label>
+            <input type="range" id="lfoDepthRange" class="param-slider" min="0" max="1" step="0.01" value="0.2">
+          </div>
+
+          <div class="col">
+            <label for="filterCutoffRange" class="small">CUT-OFF</label>
+            <input type="range" id="filterCutoffRange" class="param-slider" min="100" max="10000" step="100" value="5000">
+          </div>
+
+          <div class="col">
+            <label for="gainRange" class="small">GAIN</label>
+            <input type="range" id="gainRange" class="param-slider" min="0" max="1" step="0.01" value="0.5">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Rail -->
+    <aside class="rail-bezel" aria-label="Side rail bezel">
+      <div class="side-rail steel">
+
+        <!-- Rivets -->
+        <span class="rivet rivet--left" aria-hidden="true"></span>
+        <span class="rivet rivet--right" aria-hidden="true"></span>
+        <span class="rivet rivet--tl" aria-hidden="true"></span>
+        <span class="rivet rivet--tr" aria-hidden="true"></span>
+        <span class="rivet rivet--bl" aria-hidden="true"></span>
+        <span class="rivet rivet--br" aria-hidden="true"></span>
+
+        <!-- Play Switch-->
+        <div class="switch-wrap" id="playSwitch" aria-label="Play/Pause Switch">
+          <label class="switch switch--play" aria-label="Interruttore PLAY">
+            <input type="checkbox" />
+            <div class="button">
+              <div class="light"></div>
+              <div class="dots"></div>
+              <div class="characters" aria-hidden="true"></div>
+              <div class="shine"></div>
+              <div class="shadow"></div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Rec Switch -->
+        <div class="switch-wrap" id="recSwitch" aria-label="Record Switch">
+          <label class="switch switch--rec" aria-label="Interruttore REC">
+            <input type="checkbox" />
+            <div class="button">
+              <div class="light"></div>
+              <div class="dots"></div>
+              <div class="characters" aria-hidden="true"></div>
+              <div class="shine"></div>
+              <div class="shadow"></div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Timer Display-->
+        <div class="time-display" id="timeDisplay">0:00/10:00</div>
+
+        <!-- dB Meter -->
+        <div class="dbmeters" id="dbMeters" aria-label="dB meter stereo">
+          <!-- Left Channel -->
+          <ol class="meter" id="meterL" data-ch="L" aria-hidden="true">
+            <li class="led" data-color="red"></li>
+            <li class="led" data-color="red"></li>
+            <li class="led" data-color="amber"></li>
+            <li class="led" data-color="amber"></li>
+            <li class="led" data-color="amber"></li>
+            <li class="led" data-color="green"></li>
+            <li class="led" data-color="green"></li>
+            <li class="led" data-color="green"></li>
+            <li class="led" data-color="green"></li>
+          </ol>
+
+          <!-- Right Channel -->
+          <ol class="meter" id="meterR" data-ch="R" aria-hidden="true">
+            <li class="led" data-color="red"></li>
+            <li class="led" data-color="red"></li>
+            <li class="led" data-color="amber"></li>
+            <li class="led" data-color="amber"></li>
+            <li class="led" data-color="amber"></li>
+            <li class="led" data-color="green"></li>
+            <li class="led" data-color="green"></li>
+            <li class="led" data-color="green"></li>
+            <li class="led" data-color="green"></li>
+          </ol>
+        </div>
+
+        <!-- Master Volume Fader -->
+        <div class="col center">
+          <div class="fader" id="masterFader" aria-label="Fader volume">
+            <div class="ticks" aria-hidden="true">
+              <div class="ticks-col left minor"></div>
+              <div class="ticks-col right minor"></div>
+            </div>
+            <div class="slot" aria-hidden="true"></div>
+            <button
+              class="thumb" id="masterThumb" role="slider" aria-orientation="vertical"
+              aria-valuemin="0" aria-valuemax="100" aria-valuenow="80" aria-label="Volume"
+            ></button>
+          </div>
+          <div class="vertical-label">MASTER</div>
+        </div>
+
+        <div class="scratches">
+          <span style="--x:58%; --y:34.6%; --len:60px; --rot:-18deg"></span>
+          <span style="--x:42%; --y:58%; --len:70px; --rot:12deg"></span>
+          <span style="--x:78%; --y:46%; --len:30px; --rot:-6deg"></span>
+          <span style="--x:43%; --y:83%; --len:80px; --rot:-22deg"></span>
+          <span style="--x:15%; --y:2%; --len:27px; --rot:15deg"></span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- lame.js for MP3 export -->
+  <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+
+  <!-- Main JS File -->
+  <script type="module" src="main.js"></script>
+</body>
+</html>

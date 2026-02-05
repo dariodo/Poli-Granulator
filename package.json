@@ -1,0 +1,27 @@
+{
+  "name": "poli-granulator",
+  "version": "1.0.0",
+  "description": "A browser-based granular synthesizer with real-time audio processing using Web Audio API and AudioWorklet",
+  "author": "Dario Sorce, Carlo Becherucci",
+  "license": "MIT",
+  "keywords": [
+    "granular",
+    "synthesizer",
+    "web-audio",
+    "audioworklet",
+    "music",
+    "audio",
+    "dsp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dariodo/Poli-Granulator"
+  },
+  "scripts": {
+    "dev": "npx serve -l 3000",
+    "start": "npx http-server -p 3000 -c-1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
