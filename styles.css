@@ -117,17 +117,17 @@
 /* Fonts - only those actually used */
 @font-face{
   font-family:"JetBrains Mono";
-  src: url("/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf") format("truetype");
+  src: url("assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf") format("truetype");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face{
   font-family:"JetBrains Mono";
-  src: url("/assets/fonts/JetBrains_Mono/static/JetBrainsMono-SemiBold.ttf") format("truetype");
+  src: url("assets/fonts/JetBrains_Mono/static/JetBrainsMono-SemiBold.ttf") format("truetype");
   font-weight: 600; font-style: normal; font-display: swap;
 }
 @font-face{
   font-family: "Digital7Mono";
-  src: url("/assets/fonts/digital_7/digital-7 (mono).ttf") format("truetype");
+  src: url("assets/fonts/digital_7/digital-7 (mono).ttf") format("truetype");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 

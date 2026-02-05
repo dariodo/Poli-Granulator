@@ -328,8 +328,12 @@ LEGEND:
 ```
 Poli-Granulator/
 ├── index.html              # Main HTML page
-├── main.js                 # Entry point just to imports boot.js
+├── main.js                 # Entry point, imports boot.js
 ├── styles.css              # Global styles
+├── package.json            # Project metadata and scripts
+├── LICENSE                 # MIT license
+├── README.md               # This file
+├── .gitignore              # Git ignore rules
 │
 ├── app/                    # Application logic
 │   ├── boot.js             # Orchestration, hooks wiring, DOMContentLoaded
@@ -343,7 +347,7 @@ Poli-Granulator/
 │   │   ├── sab.js            # SharedArrayBuffer parameter management
 │   │   └── transport.js      # Play/pause, transport gain control
 │   │
-│   ├── input/              # Input handling
+│   ├── imput/              # Input handling
 │   │   ├── keyboard-glue.js # QWERTY 
 │   │   └── midi-glue.js     # MIDI 
 │   │
@@ -384,7 +388,7 @@ Poli-Granulator/
 │   │
 │   └── waveform/
 │       ├── waveform.js         # Waveform rendering, peaks cache
-│       └── markers.js          # Cursor markers, dragging
+│       └── makers.js           # Cursor markers, dragging
 │
 ├── worklet/                # AudioWorklet processors
 │   ├── granular-processor.js   # Main granular synthesis engine
@@ -397,9 +401,9 @@ Poli-Granulator/
 │       └── windows.js          # Hann LUT, panning utilities
 │
 └── assets/                 # Static assets
-    ├── audio/              # Sample audio files for synthesis
+    ├── audio/              # Sample audio files
     ├── fonts/              # Custom fonts
-    └── icons/              # Buttons icons
+    └── icons/              # UI icons
 ```
 
 ---
@@ -965,12 +969,22 @@ When SAB is available, parameters are written directly to shared memory and read
 
 ## Getting Started
 
+### Try it Online
+
+The easiest way to use Poli-Granulator — no installation required!
+
+**[🎹 Launch Poli-Granulator](https://dariodo.github.io/Poli-Granulator/)**
+
+Just click the link above and start experimenting in your browser.
+
 ### Run Locally
+
+If you prefer to run the project locally or want to modify the code:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/poli-granulator.git
-   cd poli-granulator
+   git clone https://github.com/dariodo/Poli-Granulator.git
+   cd Poli-Granulator
    ```
 
 2. Install the dev server (once):
@@ -990,6 +1004,8 @@ When SAB is available, parameters are written directly to shared memory and read
 ### Quick Start
 
 1. Click **LOAD** to import an audio file (or use the mic)
+   - Some sample audio files are included in the `assets/audio/` folder — feel free to try them!
+   - You can also upload any audio file you like (WAV, MP3, OGG, etc.)
 2. Press **PLAY** or use keyboard keys (A, S, D, etc.) to trigger grains
 3. Adjust **Size**, **Density**, **Spread** knobs to shape the sound
 4. Drag the colored markers on the waveform to change cursor positions
